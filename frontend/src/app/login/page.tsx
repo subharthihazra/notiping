@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import {
     Card,
@@ -24,12 +26,13 @@ function LoginPage() {
     const router = useRouter();
     const dispatch = useDispatch();
     const user = useSelector((state: RootState) => state.user);
+    const redirectUrl: string = "/";
 
     useEffect(() => {
         console.log(user.isLoading);
         if (!user.isLoading && user.isAuth) {
             // Redirect to dashboard page
-            router.push("/");
+            router.push(redirectUrl);
         }
     }, [user.isAuth, router, user.isLoading]);
 
@@ -37,15 +40,15 @@ function LoginPage() {
         e.preventDefault();
 
         const formData: {
-            emailId: string;
+            email: string;
             password: string;
         } = {
-            emailId: (e.target as HTMLFormElement).email.value,
+            email: (e.target as HTMLFormElement).email.value,
             password: (e.target as HTMLFormElement).password.value,
         };
 
         if (
-            formData?.emailId?.trim()?.toString() != "" &&
+            formData?.email?.trim()?.toString() != "" &&
             formData?.password != ""
         ) {
             try {
@@ -77,7 +80,7 @@ function LoginPage() {
                     setCurstate("idle");
 
                     // Redirect to .. page
-                    router.push("/chatwithai");
+                    router.push(redirectUrl);
                 }
             } catch (error: any) {
                 console.error("Error login:", error);
@@ -93,7 +96,7 @@ function LoginPage() {
                 <CardHeader>
                     <CardTitle className="text-3xl font-bold">Login</CardTitle>
                     <CardDescription className="text-gray-500 dark:text-gray-400">
-                        Get Access to Your Cuddly Account
+                        Get Access to Your Account
                     </CardDescription>
                 </CardHeader>
                 <CardContent>

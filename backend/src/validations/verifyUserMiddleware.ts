@@ -16,8 +16,10 @@ export async function verifyUserMiddleware(
       req.cookies["Authorization"] ||
       req.header("Authorization")?.split("Bearer ")[1];
 
+      console.log(Authorization)
+
     if (!Authorization) {
-      return next(new CustomError(404, "Authentication token missing"));
+      return next(new CustomError(401, "Authentication token missing"));
     }
     const secretKey: string = String(JWT_SECRET_KEY);
     const verificationResponse = (await verify(

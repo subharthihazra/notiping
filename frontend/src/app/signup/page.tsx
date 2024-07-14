@@ -38,18 +38,18 @@ function SignupPage() {
     e.preventDefault();
 
     const formData: {
-      username: string;
-      emailId: string;
+      name: string;
+      email: string;
       password: string;
     } = {
-      username: (e.target as HTMLFormElement).username.value,
-      emailId: (e.target as HTMLFormElement).email.value,
+      name: (e.target as HTMLFormElement).username.value,
+      email: (e.target as HTMLFormElement).email.value,
       password: (e.target as HTMLFormElement).password.value,
     };
 
     if (
-      formData?.username?.trim()?.toString() != "" &&
-      formData?.emailId?.trim()?.toString() != "" &&
+      formData?.name?.trim()?.toString() != "" &&
+      formData?.email?.trim()?.toString() != "" &&
       formData?.password != ""
     ) {
       try {
@@ -82,7 +82,7 @@ function SignupPage() {
         <CardHeader>
           <CardTitle className="text-3xl font-bold">Signup</CardTitle>
           <CardDescription className="text-gray-500 dark:text-gray-400">
-            Create a New Cuddly Account
+            Create a New Account
           </CardDescription>
         </CardHeader>
         <CardContent>
