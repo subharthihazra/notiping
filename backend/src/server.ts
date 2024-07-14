@@ -2,6 +2,8 @@ import express, { Express, Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { SERVER_PORT } from "./config/env";
+import authRouter from "./routes/auth";
+import ErrorMiddleware from "./errorhandlers/ErrorMiddleware";
 import connectDB from "./db/connect";
 
 const app: Express = express();
@@ -22,10 +24,16 @@ app.use(express.json());
 // parse cookie
 app.use(cookieParser());
 
+// Adding Auth Router
+app.use("/auth", authRouter);
+
+// ERROR middleware (must be in last)
+app.use(ErrorMiddleware);
+
+// basic api
 app.get("/", (req: Request, res: Response) => {
   res.status(200).send("notiping api");
 });
-
 
 const startServer = async () => {
   try {
