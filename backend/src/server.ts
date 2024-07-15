@@ -39,14 +39,20 @@ app.get("/", (req: Request, res: Response) => {
 const port = String(SERVER_PORT) || "5000";
 const wsport = String(WS_PORT) || "5001";
 
-startWSServer(parseInt(wsport));
-
 const startServer = async () => {
   try {
     await connectDB();
 
-    app.listen(port, () => {
+    const server = app.listen(port, () => {
       console.log(`Server is listening on port ${port} ...`);
+    });
+
+    const wss = startWSServer(parseInt(wsport));
+
+    server.on("upgrade", (req, socket, head) => {
+      wss.handleUpgrade(req, socket, head, (ws) => {
+        wss.emit("connection", ws, req);
+      });
     });
   } catch (err) {
     console.log(err);

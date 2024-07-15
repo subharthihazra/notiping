@@ -5,10 +5,12 @@ import {
   makeOnline,
   userWSIds,
 } from "../store";
-import WebSocket from "ws";
+import ws from "ws";
 
 export default function startWSServer(port: number | undefined) {
-  const wss = new WebSocket.Server({ port: port });
+  // const wss = new WebSocket.Server({ port: port });
+  const wss = new ws.Server({ noServer: true });
+
 
   wss.on("connection", (ws: any, req: any) => {
     const params = new URLSearchParams(req.url.split("?")[1]);
