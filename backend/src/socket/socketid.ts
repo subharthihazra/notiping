@@ -1,16 +1,21 @@
 import { NextFunction, Request, Response } from "express";
-import { removeWSIdByEmail, userWSIds } from "../store";
+import { getWSIdByEmail, removeWSIdByEmail, userWSIds } from "../store";
 import { v4 as uuidv4 } from "uuid";
 
 export async function getwsid(req: Request, res: Response, next: NextFunction) {
   try {
-    removeWSIdByEmail(req.user.email);
+    let user = getWSIdByEmail(req.user.email);
+    // console.log(wsid,"hehr")
+    let wsid;
 
-    const wsid = uuidv4();
+    if (!user) {
+      wsid = uuidv4();
+      userWSIds.push({ email: req.user.email, name: req.user.name, wsid });
+    } else {
+      wsid = user.wsid;
+    }
 
-    userWSIds.push({ email: req.user.email, name: req.user.name, wsid });
-
-    res.status(201).json({ success: true, data: wsid, message: "generated" });
+    res.status(201).json({ success: true, wsid: wsid, message: "generated" });
   } catch (err) {
     next(err);
   }

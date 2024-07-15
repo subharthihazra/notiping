@@ -17,7 +17,7 @@ export function isValidWSId(email: string) {
   }
 }
 
-export function getWSIdNyEmail(wsid: string) {
+export function getWSbyId(wsid: string) {
   const users = userWSIds.filter((item) => item.wsid === wsid);
   if (users[0]) {
     return users[0];
@@ -26,7 +26,7 @@ export function getWSIdNyEmail(wsid: string) {
   }
 }
 
-export function getWSbyId(email: string) {
+export function getWSIdByEmail(email: string) {
   const users = userWSIds.filter((item) => item.email === email);
   if (users[0]) {
     return users[0];
@@ -35,10 +35,10 @@ export function getWSbyId(email: string) {
   }
 }
 
-export function makeOnline(wsid: string) {
+export function makeOnline(wsid: string, ws: any) {
   userWSIds = userWSIds.map((item) =>
     item.wsid === wsid
-      ? { email: item.email, name: item.name, wsid: item.wsid, online: true }
+      ? { email: item.email, name: item.name, wsid: item.wsid, online: true, ws }
       : item
   );
 }
@@ -47,7 +47,7 @@ export function makeOnline(wsid: string) {
 export function makeOffline(wsid: string) {
     userWSIds = userWSIds.map((item) =>
       item.wsid === wsid
-        ? { email: item.email, name: item.name, wsid: item.wsid, online: false }
+        ? { email: item.email, name: item.name, wsid: item.wsid, online: false, ws: null }
         : item
     );
   }
