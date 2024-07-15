@@ -123,7 +123,7 @@ export async function logout(req: Request, res: Response, next: NextFunction) {
       throw new CustomError(409, `This email ${userData.email} was not found`);
     }
 
-    res.setHeader("Set-Cookie", ["Authorization=; Max-age=0"]);
+    res.setHeader("Set-Cookie", ["Authorization=; HttpOnly; Max-Age=0; SameSite=None;  Secure"]);
     res
       .status(200)
       .json({ success: true, data: foundUser, message: "loggedout" });
