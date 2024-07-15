@@ -5,6 +5,7 @@ import { SERVER_PORT } from "./config/env";
 import authRouter from "./routes/auth";
 import ErrorMiddleware from "./errorhandlers/ErrorMiddleware";
 import connectDB from "./db/connect";
+import startWSServer from "./socket/socket";
 
 const app: Express = express();
 
@@ -35,11 +36,14 @@ app.get("/", (req: Request, res: Response) => {
   res.status(200).send("notiping api");
 });
 
+const port = String(SERVER_PORT) || "5000";
+
+startWSServer(5501);
+
 const startServer = async () => {
   try {
     await connectDB();
 
-    const port = String(SERVER_PORT) || 5000;
     app.listen(port, () => {
       console.log(`Server is listening on port ${port} ...`);
     });

@@ -17,11 +17,11 @@ export default function Isauth({
           withCredentials: true,
         })
         .then((res: any) => {
-          console.log(res.data.data.emailId);
+          console.log(res.data.data.email);
           dispatch(
             setUser({
               name: res.data?.data?.name,
-              email: res.data?.data?.emailId,
+              email: res.data?.data?.email,
             })
           );
         })
