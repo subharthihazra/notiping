@@ -1,6 +1,10 @@
 # notiping
 ### Instant Notifications, Real-Time Connections
 
+Live Link: https://notiping.vercel.app
+
+Api Link: https://notiping.onrender.com
+
 ## Tech Stack Used:
 ### Backend
 - Node & Express
