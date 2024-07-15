@@ -133,7 +133,9 @@ export default function Dashboard() {
         }
       );
 
+      ws.current = null;
       dispatch(unsetUser());
+
 
       router.push(redirectUrl);
     } catch (error) {
