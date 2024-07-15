@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { SERVER_PORT } from "./config/env";
+import { SERVER_PORT, WS_PORT } from "./config/env";
 import authRouter from "./routes/auth";
 import ErrorMiddleware from "./errorhandlers/ErrorMiddleware";
 import connectDB from "./db/connect";
@@ -37,8 +37,9 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 const port = String(SERVER_PORT) || "5000";
+const wsport = String(WS_PORT) || "5001";
 
-startWSServer(5501);
+startWSServer(parseInt(wsport));
 
 const startServer = async () => {
   try {
