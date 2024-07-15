@@ -133,6 +133,7 @@ export default function Dashboard() {
         }
       );
 
+      ws.current?.close();
       ws.current = null;
       dispatch(unsetUser());
 
