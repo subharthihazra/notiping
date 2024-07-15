@@ -9,24 +9,28 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/lib/store";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import { Skeleton } from "@/components/ui/skeleton";
+import { RxValueNone } from "react-icons/rx";
+import { unsetUser } from "@/lib/slices/user";
 
 export default function Dashboard() {
   const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
   const [wsid, setwsid] = useState<string | null>(null);
   const ws = useRef<WebSocket | null>(null);
+  const dispatch = useDispatch();
 
+  const user = useSelector((state: RootState) => state.user);
   const onlineUsersExceptMe: any = onlineUsers.filter(
     (item) => item.wsid !== wsid
   );
 
   const router = useRouter();
-  const user = useSelector((state: RootState) => state.user);
   const redirectUrl: string = "/login";
 
   useEffect(() => {
@@ -80,7 +84,7 @@ export default function Dashboard() {
               // console.log(payload);
 
               toast(`${payload.name} (${payload.email}) pinged you !`, {
-                duration: 3000,
+                duration: 4000,
                 position: "bottom-right",
               });
 
@@ -90,7 +94,7 @@ export default function Dashboard() {
               // console.log(payload);
 
               toast(`${payload.name} (${payload.email}) pinged all !`, {
-                duration: 3000,
+                duration: 4000,
                 position: "bottom-right",
               });
               break;
@@ -119,32 +123,103 @@ export default function Dashboard() {
     );
   }
 
-  return user?.isLoading ? (
-    <div>Loading ...</div>
-  ) : (
+  async function Signout() {
+    try {
+      const { data } = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_PATH}/auth/logout`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+
+      dispatch(unsetUser());
+
+      router.push(redirectUrl);
+    } catch (error) {
+      console.log("Error Fetching Data");
+    }
+  }
+
+  return (
+    <div>
+      <div className="w-full py-4 px-8 bg-slate-500 text-white text-3xl flex justify-between">
+        Notiping
+        <Button variant="secondary" onClick={Signout}>
+          Logout
+        </Button>
+      </div>
+      {user?.isLoading ? (
+        <Loading />
+      ) : (
+        <div className="flex flex-col gap-8 mx-8 my-8">
+          <div>
+            <div className=" text-xl font-bold">{user.name}</div>
+            <div className=" text-muted-foreground">{user.email}</div>
+          </div>
+          <Separator />
+          <div className="text-center">
+            <Button
+              variant="default"
+              onClick={pingAll}
+              disabled={onlineUsersExceptMe?.length === 0}
+            >
+              Ping All
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {onlineUsersExceptMe?.map((item: any, idx: any) => (
+              <PingCard
+                key={idx}
+                name={item.name}
+                email={item.email}
+                onClick={() => pingUser(item.wsid)}
+              />
+            ))}
+          </div>
+          {onlineUsersExceptMe?.length === 0 && (
+            <div className="mx-auto px-auto my-5">
+              <RxValueNone className="text-5xl" />
+            </div>
+          )}
+          <Toaster />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Loading() {
+  return (
     <div className="flex flex-col gap-8 mx-8 my-8">
-      <div>
-        <div className=" text-xl font-bold">{user.name}</div>
-        <div className=" text-muted-foreground">{user.email}</div>
+      <div className="flex flex-col gap-2">
+        <Skeleton className="h-6 bg-slate-300 w-1/2 md:w-1/3" />
+        <Skeleton className="h-5 bg-slate-200 w-1/3 md:w-1/4" />
       </div>
       <Separator />
       <div className="text-center">
-        <Button variant="default" onClick={pingAll}>
-          Ping All
-        </Button>
+        <Skeleton className="h-9 w-20 mx-auto bg-slate-300"></Skeleton>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {onlineUsersExceptMe?.map((item: any, idx: any) => (
-          <PingCard
-            key={idx}
-            name={item.name}
-            email={item.email}
-            onClick={() => pingUser(item.wsid)}
-          />
+        {[1, 2, 3, 4].map((item: any, idx: any) => (
+          <LoadingCard key={idx} />
         ))}
       </div>
-      <Toaster />
     </div>
+  );
+}
+
+function LoadingCard() {
+  return (
+    <Card>
+      <CardHeader>
+        <Skeleton className="h-5 bg-slate-300"></Skeleton>
+        <Skeleton className="h-4 bg-slate-200 w-5/6"></Skeleton>
+      </CardHeader>
+      <CardFooter className="flex justify-end">
+        <Skeleton className="h-9 w-16 bg-slate-300"></Skeleton>
+      </CardFooter>
+    </Card>
   );
 }
 

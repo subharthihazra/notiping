@@ -26,7 +26,7 @@ function LoginPage() {
     const router = useRouter();
     const dispatch = useDispatch();
     const user = useSelector((state: RootState) => state.user);
-    const redirectUrl: string = "/";
+    const redirectUrl: string = "/dashboard";
 
     useEffect(() => {
         console.log(user.isLoading);
@@ -65,11 +65,11 @@ function LoginPage() {
                 // console.log(data.user);
 
                 // set context
-                if (data?.user?.emailId && data?.user?.name) {
+                if (data?.email && data?.name) {
                     dispatch(
                         setUser({
-                            name: data.user.name,
-                            email: data.user.emailId,
+                            name: data.name,
+                            email: data.email,
                         })
                     );
 
@@ -78,7 +78,7 @@ function LoginPage() {
 
                     setErrormsg("");
                     setCurstate("idle");
-
+                    
                     // Redirect to .. page
                     router.push(redirectUrl);
                 }

@@ -18,19 +18,20 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/lib/store";
 import { setUser } from "@/lib/slices/user";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 function SignupPage() {
   const [curstate, setCurstate] = useState<string>("idle");
   const [errormsg, setErrormsg] = useState<string>("");
-  const router = useRouter()
+  const router = useRouter();
   const dispatch = useDispatch();
-  const user = useSelector((state: RootState) => state.user); 
+  const user = useSelector((state: RootState) => state.user);
+  const redirectUrl: string = "/dashboard";
 
   useEffect(() => {
     if (!user.isLoading && user.isAuth) {
       // Redirect to login page
-      router.push("/login");
+      router.push(redirectUrl);
     }
   }, [user.isAuth, router, user.isLoading]);
 
@@ -75,7 +76,6 @@ function SignupPage() {
     }
   }
 
-  
   return (
     <div className="min-h-[100vh] flex flex-col justify-center bg-[#ffebc4] bg-[linear-gradient(180deg,#ffebc4,#fd9)]">
       <Card className=" sm:w-[400px] sm:mx-auto mx-3 my-3 shadow-2xl border-[#00000055]">
@@ -139,7 +139,10 @@ function SignupPage() {
             </form>
             <div className="mt-4 text-center text-md">
               Already have an account?{" "}
-              <button className="underline" onClick={() => router.push("/login")}>
+              <button
+                className="underline"
+                onClick={() => router.push("/login")}
+              >
                 Login
               </button>
             </div>
